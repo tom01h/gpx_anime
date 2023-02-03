@@ -2,7 +2,7 @@
 
 lat, lon の軌跡の動画をMP4で出力する  
 別にffmpegが必要  
-extentionの内容をテキストで出力
+extentionの内容をテキストで出力する
 
 ### 動画
 input.gpxを入力してanim.mp4を出力  
@@ -35,4 +35,7 @@ input.gpxを入力してgps.pngを出力
     <yaw>"312.88"</yaw>
     <accl>"0.02, 0.00, 0.00"</accl>
     </extensions>
-   </trkpt>```
+   </trkpt>
+```
+
+![](anim.gif)
