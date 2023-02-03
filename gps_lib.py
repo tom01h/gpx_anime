@@ -26,16 +26,17 @@ def parse(filename, extentions, start, end):
                 lpoint.append(ipoint)
     return lat, lon, lpoint
 
-def plot(frame_no, extentions, ax, lon, lat, lpoint, line_height, daxis):
+def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis):
     xmin = min(lon)
     xmax = max(lon)
     ymin = min(lat)
     ymax = max(lat)
+    line_height = (ymax-ymin)*size/1080*1.5
     ax.cla()
     ax.axis(daxis)
     ax.set_xlim([xmin,xmax])
     ax.set_ylim([ymin,ymax])
     ax.plot(lon[:frame_no], lat[:frame_no], color="b")
-    ax.text(xmin, ymin+line_height*len(extentions), "time: "+str(lpoint[frame_no]['time']), size=30)
+    ax.text(xmin, ymin+line_height*len(extentions), "time: "+str(lpoint[frame_no]['time']), size=size)
     for i, s in enumerate(extentions):
-        ax.text(xmin, ymin+line_height*i, s+": "+str(lpoint[frame_no][s]), size=30)
+        ax.text(xmin, ymin+line_height*i, s+": "+str(lpoint[frame_no][s]), size=size)

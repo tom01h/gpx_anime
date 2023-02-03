@@ -9,7 +9,7 @@ input.gpxを入力してanim.mp4を出力
 `extentions=['yaw', 'pitch', 'roll', 'speed']` に並べたデータをテキストで出力  
 `start = 120 # frame No.`でスタートフレームを指定  
 `end = 425 # frame No.`でエンドフレームを指定  
-`line_height=0.00008`で1行の高さを指定 (自動にしたい)  
+`size = 30 # text size`で文字サイズを指定  
 
 ### 静止画
 input.gpxを入力してgps.pngを出力  
