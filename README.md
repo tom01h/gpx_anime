@@ -1,17 +1,20 @@
 # GPXログからMP4動画を作る
 
 lat, lon の軌跡の動画をMP4で出力する  
-rollとspedを棒グラフで出力する
-extentionの内容をテキストで出力する
-別にffmpegが必要  
+rollとspedを棒グラフで出力する  
+extentionの内容をテキストで出力する  
+別にffmpegが必要
 
 ### 動画
 input.gpxを入力してanim.mp4を出力  
 `extentions=['yaw', 'pitch', 'roll', 'speed']` に並べたデータをテキストで出力  
-`start = 120 # frame No.`でスタートフレームを指定  
-`end = 425 # frame No.`でエンドフレームを指定  
-`size = 30 # text size`で文字サイズを指定  
+`size =10 # text size`で文字サイズを指定  
 
+変換終了条件は`gps_lib.py`の↓の通り
+```
+start_speed = 2  # ipoint['speed'] > start_speed となった後に
+stop_speed = 0.1 # ipoint['speed'] < stop_speed となると変換を中止する
+```
 ### 静止画
 input.gpxを入力してgps.pngを出力  
 動画の設定以外にも  
