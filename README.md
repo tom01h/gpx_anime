@@ -1,8 +1,9 @@
 # GPXログからMP4動画を作る
 
 lat, lon の軌跡の動画をMP4で出力する  
-別にffmpegが必要  
+rollとspedを棒グラフで出力する
 extentionの内容をテキストで出力する
+別にffmpegが必要  
 
 ### 動画
 input.gpxを入力してanim.mp4を出力  

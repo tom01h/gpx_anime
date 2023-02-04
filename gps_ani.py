@@ -6,15 +6,17 @@ from matplotlib.animation import FuncAnimation
 import gps_lib
 
 extentions=['yaw', 'pitch', 'roll', 'speed'] # 下から順に表示する
-start = 120 # frame No.
-end = 425 # frame No.
-size = 30 # text size
+size = 10 # text size
 
 daxis = "off" # グラフ軸描画の有無 on or off
 
-lat, lon, lpoint = gps_lib.parse("input.gpx", extentions, start, end)
+lat, lon, lpoint = gps_lib.parse("input.gpx", extentions)
 
-fig, ax = plt.subplots(dpi=100, figsize=(19.2,10.8))
+fig, ax = plt.subplots(2, 2, gridspec_kw={
+                           'width_ratios': [10, 1],
+                           'height_ratios': [1, 10]},
+                           dpi=100, figsize=(19.2,10.8))
+fig.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
 ani = FuncAnimation(fig, gps_lib.plot, \
     fargs = (extentions, ax, lon, lat, lpoint, size, daxis),\
     frames=len(lat), interval=100)
