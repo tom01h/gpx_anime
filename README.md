@@ -6,7 +6,8 @@ extentionの内容をテキストで出力する
 別にffmpegが必要
 
 ### 動画
-input.gpxを入力してanim.mp4を出力  
+`python3 gps_ani.py`を実行
+input.gpxを入力してgps.mp4を出力  
 `extentions=['yaw', 'pitch', 'roll', 'speed']` に並べたデータをテキストで出力  
 `size =10`で文字サイズを指定  
 `ratio = 16/9` で指定した縦横比に収まるようにサイズ調整する 0をしていするとアスペクト比を維持しないで画面いっぱいにサイズ調整する
@@ -18,6 +19,7 @@ start_speed = 2  # ipoint['speed'] > start_speed となった後に
 stop_speed = 0.1 # ipoint['speed'] < stop_speed となると変換を中止する
 ```
 ### 静止画
+`python3 gps_img.py`を実行
 input.gpxを入力してgps.pngを出力  
 動画の設定以外にも  
 `daxis = "on" # グラフ軸描画の有無 on or off`で枠の出力を指定  
