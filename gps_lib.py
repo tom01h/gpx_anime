@@ -16,12 +16,17 @@ def parse(filename, extentions, rotation=0):
 
     running = False
 
-    t = np.deg2rad(rotation)
-    R = np.array(   [[np.cos(t), -np.sin(t)],
-                    [np.sin(t),  np.cos(t)]])
-
     for track in gpx.tracks:
         for segment in track.segments:
+            if rotation == 'auto':
+                dx = segment.points[-1].latitude - segment.points[0].latitude
+                dy = segment.points[-1].longitude - segment.points[0].longitude
+                rotation = np.pi - np.arctan2(dy, dx)
+                t = rotation
+            else:
+                t = np.deg2rad(rotation)
+            R = np.array(   [[np.cos(t), -np.sin(t)],
+                            [np.sin(t),  np.cos(t)]])
             for i, point in enumerate(segment.points):
                 u = (point.latitude, point.longitude)
                 u = np.dot(R, u)
