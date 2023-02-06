@@ -14,19 +14,34 @@ def parse(filename, extentions, rotation=0):
     gpx_file = open(filename, 'r', encoding='utf-8')
     gpx = gpxpy.parse(gpx_file)
 
+    # 終了フレームを決定
     running = False
-
     for track in gpx.tracks:
         for segment in track.segments:
+            for i, point in enumerate(segment.points):
+                for ext in point.extensions:
+                    if ext.tag == 'speed':
+                        speed = float(ext.text.replace('"',''))
+                if speed > start_speed:
+                    running = True
+                if running and speed < stop_speed:
+                    break    
+    stop_frame = i
+
+    # データ解析
+    for track in gpx.tracks:
+        for segment in track.segments:
+            # 回転角度を計算
             if rotation == 'auto':
-                dx = segment.points[-1].latitude - segment.points[0].latitude
-                dy = segment.points[-1].longitude - segment.points[0].longitude
+                dx = segment.points[stop_frame-1].latitude - segment.points[0].latitude
+                dy = segment.points[stop_frame-1].longitude - segment.points[0].longitude
                 rotation = np.pi - np.arctan2(dy, dx)
                 t = rotation
             else:
                 t = np.deg2rad(rotation)
             R = np.array(   [[np.cos(t), -np.sin(t)],
                             [np.sin(t),  np.cos(t)]])
+            # リスト（lat, lon, lpoint）作成
             for i, point in enumerate(segment.points):
                 u = (point.latitude, point.longitude)
                 u = np.dot(R, u)
@@ -39,18 +54,18 @@ def parse(filename, extentions, rotation=0):
                         if ext.tag == extentions[e]:
                             ipoint[extentions[e]] = float(ext.text.replace('"',''))
                 lpoint.append(ipoint)
-                if ipoint['speed'] > start_speed:
-                    running = True
-                if running and ipoint['speed'] < stop_speed:
+                if i == stop_frame:
                     break    
     return lat, lon, lpoint
 
 def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0):
+    # 速度計 (最大50km/h)
     ax[0][0].cla()
     ax[0][0].axis(daxis)
     ax[0][0].set_xlim([0,50])
     ax[0][0].barh([0], lpoint[frame_no]['speed'], color="r")
 
+    # 軌跡
     xmin = min(lon)
     xmax = max(lon)
     ymin = min(lat)
@@ -74,8 +89,10 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0)
     for i, s in enumerate(extentions):
         ax[1][0].text(xmin, ymin+line_height*i, s+": "+str(lpoint[frame_no][s]), size=size)
 
+    # なし
     ax[0][1].axis("off")
 
+    # 傾き (‐90度～90度)
     ax[1][1].cla()
     ax[1][1].axis(daxis)
     ax[1][1].set_ylim([-90,90])
