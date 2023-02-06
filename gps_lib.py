@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import gpxpy
+import numpy as np
 
 start_speed = 2  # ipoint['speed'] > start_speed となった後に
 stop_speed = 0.1 # ipoint['speed'] < stop_speed となると変換を中止する
 
-def parse(filename, extentions):
+def parse(filename, extentions, rotation=0):
     lat = []
     lon = []
     lpoint = []
@@ -15,11 +16,17 @@ def parse(filename, extentions):
 
     running = False
 
+    t = np.deg2rad(rotation)
+    R = np.array(   [[np.cos(t), -np.sin(t)],
+                    [np.sin(t),  np.cos(t)]])
+
     for track in gpx.tracks:
         for segment in track.segments:
             for i, point in enumerate(segment.points):
-                lat.append(point.latitude)
-                lon.append(point.longitude)
+                u = (point.latitude, point.longitude)
+                u = np.dot(R, u)
+                lat.append(u[0])
+                lon.append(u[1])
                 ipoint = {}
                 ipoint['time'] = point.time
                 for ext in point.extensions:
@@ -33,7 +40,7 @@ def parse(filename, extentions):
                     break    
     return lat, lon, lpoint
 
-def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis):
+def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0):
     ax[0][0].cla()
     ax[0][0].axis(daxis)
     ax[0][0].set_xlim([0,50])
@@ -43,15 +50,15 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis):
     xmax = max(lon)
     ymin = min(lat)
     ymax = max(lat)
-    if 1:
+    if ratio != 0:
         xlen = (xmax-xmin)
         ylen = (ymax-ymin)
-        if xlen / 16 > ylen / 9:
-            ymin -= (xlen *16/9 - ylen) /2
-            ymax = ymin + xlen*16/9
+        if xlen > ylen * ratio:
+            ymin -= (xlen / ratio - ylen) /2
+            ymax = ymin + xlen / ratio
         else:
-            xmin -= (ylen *16/9 - xlen) /2
-            xmax = xmin + ylen*16/9
+            xmin -= (ylen * ratio - xlen) /2
+            xmax = xmin + ylen * ratio
     line_height = (ymax-ymin)*size/1080*1.5
     ax[1][0].cla()
     ax[1][0].axis(daxis)
