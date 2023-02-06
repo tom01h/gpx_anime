@@ -43,6 +43,15 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis):
     xmax = max(lon)
     ymin = min(lat)
     ymax = max(lat)
+    if 1:
+        xlen = (xmax-xmin)
+        ylen = (ymax-ymin)
+        if xlen / 16 > ylen / 9:
+            ymin -= (xlen *16/9 - ylen) /2
+            ymax = ymin + xlen*16/9
+        else:
+            xmin -= (ylen *16/9 - xlen) /2
+            xmax = xmin + ylen*16/9
     line_height = (ymax-ymin)*size/1080*1.5
     ax[1][0].cla()
     ax[1][0].axis(daxis)
