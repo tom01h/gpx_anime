@@ -10,7 +10,7 @@ daxis = "on" # グラフ軸描画の有無 on or off
 ratio = 16/9 # 指定した縦横比に収まるようにサイズ調整する 0でアスペクト比を維持しないでサイズ調整する
 rotation = 'auto' # 回転角度を指定（度）'auto'指定で自動
 
-lat, lon, lpoint = gps_lib.parse("input.gpx", extentions, rotation)
+lon, lat, lpoint = gps_lib.parse("input.gpx", extentions, rotation)
 
 fig, ax = plt.subplots(nrows=2, ncols=2, gridspec_kw={
                            'width_ratios': [10, 1],

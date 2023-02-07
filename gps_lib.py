@@ -14,10 +14,11 @@ def parse(filename, extentions, rotation=0):
     gpx_file = open(filename, 'r', encoding='utf-8')
     gpx = gpxpy.parse(gpx_file)
 
-    # 終了フレームを決定
-    running = False
+    # データ解析 最初の2ループはほぼ意味なし
     for track in gpx.tracks:
         for segment in track.segments:
+            # 終了フレームを決定
+            running = False
             for i, point in enumerate(segment.points):
                 for ext in point.extensions:
                     if ext.tag == 'speed':
@@ -26,27 +27,25 @@ def parse(filename, extentions, rotation=0):
                     running = True
                 if running and speed < stop_speed:
                     break    
-    stop_frame = i
-
-    # データ解析
-    for track in gpx.tracks:
-        for segment in track.segments:
-            # 回転角度を計算
+            stop_frame = i
+            # 緯度と経度で角度当たりの距離が違うので補正する係数
+            lon_lat = np.cos(np.radians(segment.points[0].latitude))
+            # 回転角度と回転行列を計算
             if rotation == 'auto':
-                dx = segment.points[stop_frame-1].latitude - segment.points[0].latitude
-                dy = segment.points[stop_frame-1].longitude - segment.points[0].longitude
-                rotation = np.pi - np.arctan2(dy, dx)
-                t = rotation
+                dx = segment.points[0].longitude - segment.points[stop_frame-1].longitude
+                dy = segment.points[0].latitude - segment.points[stop_frame-1].latitude
+                rotation = np.arctan2(dy, dx * lon_lat)
+                t = np.pi/2 - rotation
             else:
                 t = np.deg2rad(rotation)
             R = np.array(   [[np.cos(t), -np.sin(t)],
                             [np.sin(t),  np.cos(t)]])
             # リスト（lat, lon, lpoint）作成
             for i, point in enumerate(segment.points):
-                u = (point.latitude, point.longitude)
-                u = np.dot(R, u)
-                lat.append(u[0])
-                lon.append(u[1])
+                u = (point.longitude * lon_lat, point.latitude) # lon_lt は "緯度経度 → x,y座標" 変換時の距離補正
+                u = np.dot(R, u) # 回転してからリストに追加
+                lon.append(u[0])
+                lat.append(u[1])
                 ipoint = {}
                 ipoint['time'] = point.time
                 for ext in point.extensions:
@@ -56,7 +55,7 @@ def parse(filename, extentions, rotation=0):
                 lpoint.append(ipoint)
                 if i == stop_frame:
                     break    
-    return lat, lon, lpoint
+    return lon, lat, lpoint
 
 def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0):
     # 速度計 (最大50km/h)
