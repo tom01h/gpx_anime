@@ -24,6 +24,10 @@ input.gpxを入力してgps.pngを出力
 動画の設定以外にも  
 `daxis = "on" # グラフ軸描画の有無 on or off`で枠の出力を指定  
 
+### 動画 (入力動画と合成)
+`python3 gps_movie.py`を実行
+作成中…
+
 ### GPXファイルの例
 
 ```

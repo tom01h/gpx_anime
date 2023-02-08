@@ -78,15 +78,15 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0)
         else:
             xmin -= (ylen * ratio - xlen) /2
             xmax = xmin + ylen * ratio
-    line_height = (ymax-ymin)*size/1080*1.5
     ax[1][0].cla()
     ax[1][0].axis(daxis)
     ax[1][0].set_xlim([xmin,xmax])
     ax[1][0].set_ylim([ymin,ymax])
     ax[1][0].plot(lon[:frame_no], lat[:frame_no], color="b")
-    ax[1][0].text(xmin, ymin+line_height*len(extentions), "time: "+str(lpoint[frame_no]['time']), size=size)
+    star = "time: "+str(lpoint[frame_no]['time'])
     for i, s in enumerate(extentions):
-        ax[1][0].text(xmin, ymin+line_height*i, s+": "+str(lpoint[frame_no][s]), size=size)
+        star += "\n"+s+": "+str(lpoint[frame_no][s])
+    ax[1][0].text(xmin, ymin, star, size=size)
 
     # なし
     ax[0][1].axis("off")
