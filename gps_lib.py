@@ -62,7 +62,12 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0)
     ax[0][0].cla()
     ax[0][0].axis(daxis)
     ax[0][0].set_xlim([0,50])
+    ax[0][0].set_ylim([0,1])
     ax[0][0].barh([0], lpoint[frame_no]['speed'], color="r")
+    ax[0][0].spines['bottom'].set_position(('data', 1))
+    ax[0][0].set_xticks([0,10,20,30,40,50])
+    ax[0][0].set_xticklabels([0,10,20,30,40,50], fontsize=size)
+
 
     # 軌跡
     xmin = min(lon)
@@ -96,3 +101,5 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0)
     ax[1][1].axis(daxis)
     ax[1][1].set_ylim([-90,90])
     ax[1][1].bar([0], lpoint[frame_no]['roll'], color="g")
+    ax[1][1].set_yticks([-90,-60,-30,0,30,60,90])
+    ax[1][1].set_yticklabels([-90,-60,-30,0,30,60,90], fontsize=size)
