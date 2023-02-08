@@ -65,9 +65,8 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, lw, size, daxis="off", rati
     ax[0][0].cla()
     ax[0][0].axis(daxis)
     ax[0][0].set_xlim([0,50])
-    ax[0][0].set_ylim([0,1])
     ax[0][0].barh([0], lpoint[frame_no]['speed'], color="r")
-    ax[0][0].spines['bottom'].set_position(('data', 1))
+    ax[0][0].spines['bottom'].set_position(('data', 0.5))
     ax[0][0].set_xticks([0,10,20,30,40,50])
     ax[0][0].set_xticklabels([0,10,20,30,40,50], fontsize=size)
 
