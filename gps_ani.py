@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import gps_lib
 
-extentions=['yaw', 'pitch', 'roll', 'speed'] # 下から順に表示する
+extentions=['speed', 'roll', 'pitch', 'yaw']
 size = 10 # text size
 daxis = "off" # グラフ軸描画の有無 on or off
 ratio = 16/9 # 指定した縦横比に収まるようにサイズ調整する 0でアスペクト比を維持しないでサイズ調整する
