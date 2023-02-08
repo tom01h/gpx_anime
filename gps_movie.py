@@ -7,7 +7,7 @@ import argparse
 import gps_lib
 
 parser = argparse.ArgumentParser(
-            prog='gps_img.py',
+            prog='gps_movie.py',
             description='動画ファイルにGPXファイルからの軌跡を重ねる',
             add_help=True,
             )
@@ -18,6 +18,7 @@ parser.add_argument('-m', '--movei_file', default='imput.mp4', help='input mp4 f
 args = parser.parse_args()
 
 extentions=['speed', 'roll', 'pitch', 'yaw']
+lw = 5 # line width
 size = 10 # text size
 daxis = "on" # グラフ軸描画の有無 on or off
 ratio = 16/9 # 指定した縦横比に収まるようにサイズ調整する 0でアスペクト比を維持しないでサイズ調整する
@@ -38,7 +39,7 @@ ratio = video.w/video.h
 
 def make_frame(t):
     frame = int(t*10)
-    gps_lib.plot(frame, extentions, ax, lon, lat, lpoint, size, daxis, ratio)
+    gps_lib.plot(frame, extentions, ax, lon, lat, lpoint, lw, size, daxis, ratio)
 
     bmp = mplfig_to_npimage(fig)
     return bmp

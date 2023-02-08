@@ -41,7 +41,10 @@ def parse(filename, extentions, rotation=0):
             R = np.array(   [[np.cos(t), -np.sin(t)],
                             [np.sin(t),  np.cos(t)]])
             # リスト（lat, lon, lpoint）作成
+            ipoint = {'time': 'dummy'}
             for i, point in enumerate(segment.points):
+                if ipoint['time'] == point.time: # 同時刻のデータが連続した場合は削除する
+                    continue    
                 u = (point.longitude * lon_lat, point.latitude) # lon_lt は "緯度経度 → x,y座標" 変換時の距離補正
                 u = np.dot(R, u) # 回転してからリストに追加
                 lon.append(u[0])
@@ -57,7 +60,7 @@ def parse(filename, extentions, rotation=0):
                     break    
     return lon, lat, lpoint
 
-def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0):
+def plot(frame_no, extentions, ax, lon, lat, lpoint, lw, size, daxis="off", ratio=0):
     # 速度計 (最大50km/h)
     ax[0][0].cla()
     ax[0][0].axis(daxis)
@@ -87,7 +90,7 @@ def plot(frame_no, extentions, ax, lon, lat, lpoint, size, daxis="off", ratio=0)
     ax[1][0].axis(daxis)
     ax[1][0].set_xlim([xmin,xmax])
     ax[1][0].set_ylim([ymin,ymax])
-    ax[1][0].plot(lon[:frame_no], lat[:frame_no], color="b")
+    ax[1][0].plot(lon[:frame_no], lat[:frame_no], color="b", lw=lw)
     star = "time: "+str(lpoint[frame_no]['time'])
     for i, s in enumerate(extentions):
         star += "\n"+s+": "+str(lpoint[frame_no][s])
