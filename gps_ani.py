@@ -1,10 +1,17 @@
-# sedで文字列 ”mytracks:” を削除したgpxファイルを入力
-# なぜか、gpxpyがエラー吐くため…
-
-import sys
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import argparse
 import gps_lib
+
+parser = argparse.ArgumentParser(
+            prog='gps_img.py',
+            description='GPXファイルから軌跡動画を生成',
+            add_help=True,
+            )
+ 
+parser.add_argument('-i', '--input_file', default='input.gpx', help='input gpx file name')
+parser.add_argument('-o', '--output_file', default='gps.mp4', help='output mp4 file name')
+args = parser.parse_args()
 
 extentions=['speed', 'roll', 'pitch', 'yaw']
 size = 10 # text size
@@ -12,10 +19,7 @@ daxis = "off" # グラフ軸描画の有無 on or off
 ratio = 16/9 # 指定した縦横比に収まるようにサイズ調整する 0でアスペクト比を維持しないでサイズ調整する
 rotation = 'auto' # 回転角度を指定（度）'auto'指定で自動
 
-inputfile='input.gpx'
-if len(sys.argv) > 1:
-    inputfile=sys.argv[1]
-lon, lat, lpoint = gps_lib.parse(inputfile, extentions, rotation)
+lon, lat, lpoint = gps_lib.parse(args.input_file, extentions, rotation)
 
 fig, ax = plt.subplots(2, 2, gridspec_kw={
                            'width_ratios': [10, 1],
@@ -26,7 +30,4 @@ ani = FuncAnimation(fig, gps_lib.plot, \
     fargs = (extentions, ax, lon, lat, lpoint, size, daxis, ratio),\
     frames=len(lat), interval=100)
 
-outputfile='gps.mp4'
-if len(sys.argv) > 2:
-    outputfile=sys.argv[2]
-ani.save(outputfile, writer="ffmpeg")
+ani.save(args.output_file, writer="ffmpeg")
