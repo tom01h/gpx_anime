@@ -19,10 +19,14 @@ args = parser.parse_args()
 
 extentions=['speed', 'roll', 'pitch', 'yaw']
 lw = 5 # line width
-size = 10 # text size
+size = 30 # speed, roll メーターの text size
+size_all = 10 # 軌跡の横のtext size
+daxis = "on" # グラフ軸描画の有無 on or off
 daxis = "on" # グラフ軸描画の有無 on or off
 ratio = 16/9 # 指定した縦横比に収まるようにサイズ調整する 0でアスペクト比を維持しないでサイズ調整する
 rotation = 'auto' # 回転角度を指定（度）'auto'指定で自動
+grid_m = 5 # grid 間隔(m)
+grid_w = 1 # grid line width
 
 #video = mp.VideoFileClip(args.movei_file).subclip(0,10)
 video = mp.VideoFileClip(args.movei_file)
@@ -39,7 +43,7 @@ ratio = video.w/video.h
 
 def make_frame(t):
     frame = int(t*10)
-    gps_lib.plot(frame, extentions, ax, lon, lat, lpoint, lw, size, daxis, ratio)
+    gps_lib.plot(frame, extentions, ax, lon, lat, lpoint, lw, size, size_all, daxis, ratio, grid_m, grid_w)
 
     bmp = mplfig_to_npimage(fig)
     return bmp
